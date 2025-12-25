@@ -19,8 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
-import kotlin.time.Duration
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,4 +67,12 @@ private fun MainActivity.test_1_4() {
 @Composable
 fun AppAndroidPreview() {
     App()
+}
+
+@Composable
+fun CharCounter(value: String){
+    // remember会防止重复初始化，
+    // 在传入的值改变时需要重复初始化的情况，可以设置value，value改变就会重新初始化
+    val length = remember(value) { value.length }
+    Text("字符串的长度是：${length}")
 }
