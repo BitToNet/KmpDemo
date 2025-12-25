@@ -54,9 +54,9 @@ private fun MainActivity.test_1_4() {
         // remember起到缓存作用，第一次调用我的时候，我会去执行，第二次调用会把缓存给你
         var name by remember { mutableStateOf("邱珑") }
 
-        Button({}) {
-            Text(name)
-        }
+        // 不使用remember的情况下，text和mutableState在同一层，text重组会导致name重新初始化
+        // 包了remember以后他们在同一层也可以使用了
+        Text(name)
 
         lifecycleScope.launch {
             delay(3000)
