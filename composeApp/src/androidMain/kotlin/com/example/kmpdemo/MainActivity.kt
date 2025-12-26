@@ -6,16 +6,24 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,11 +48,60 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            Column(
+                Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    // 这个方法写在最后才有效
+                    .verticalScroll(rememberScrollState())
+            ) {
 //            App()
-            // 1.4-组合、重组作用域和 remember()
-            test_1_4()
-            // 基础组件在compose中的替代物
-            test_1_5()
+                // 1.4-组合、重组作用域和 remember()
+                test_1_4()
+                // 基础组件在compose中的替代物
+                test_1_5()
+                //1.7-Modifier 到底是什么：强大又难懂的核心概念
+                test_1_7()
+            }
+        }
+    }
+}
+
+@Composable
+private fun test_1_7() {
+    Column(
+        Modifier
+            .background(Color.Red)
+            // Modifier不是builder设计模式
+            // Modifier的调用顺序对结果有影响，这里代表先绘制一个红色背景，再在基础上加padding
+            .padding(8.dp)
+            // 圆角
+            .background(Color.Blue, RoundedCornerShape(24.dp))
+            // 点击的响应范围在padding里面，不包括padding
+            .clickable {}
+            .padding(8.dp)
+            .padding(8.dp)
+    ) {
+        Image(
+            painterResource(R.drawable.ic_launcher_background),
+            "头像",
+            // 圆形图片
+            Modifier
+                // 处理背景色
+//                .background(Color.Blue, RoundedCornerShape(24.dp))
+                // 前景背景都处理
+                .clip(CircleShape)
+                // 设置尺寸
+                .size(150.dp)
+//                .fillMaxWidth()
+//                .fillMaxWidth()
+        )
+        Text("皮皮爽", Modifier.clickable {})
+        Button(
+            {},
+            colors = ButtonColors(Color.White, Color.Blue, Color.Green, Color.Red)
+        ) {
+            Text("点击")
         }
     }
 }
@@ -171,7 +229,7 @@ private fun MainActivity.test_1_4() {
 @Composable
 fun AppAndroidPreview() {
 //    App()
-    test_1_5()
+    test_1_7()
 }
 
 @Composable
